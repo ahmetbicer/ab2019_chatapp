@@ -1,5 +1,5 @@
 from PySide2 import QtWidgets, QtCore
-from data_conn import mesaj_al, mesaj_gonder
+from data_conn import get_message, send_message
 
 
 
@@ -19,23 +19,23 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.timer = QtCore.QTimer()
         self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.mesaj_al_callback)
+        self.timer.timeout.connect(self.get_message_callback)
         self.timer.start()
 
         self.text_input = QtWidgets.QLineEdit()
-        self.text_input.setPlaceholderText("Mesaj")
+        self.text_input.setPlaceholderText("Message")
 
         self.text_input2 = QtWidgets.QLineEdit()
-        self.text_input2.setPlaceholderText("İsim")
+        self.text_input2.setPlaceholderText("Name")
 
         self.textedit = QtWidgets.QTextEdit()
         self.textedit.setReadOnly(True)
 
         self.button = QtWidgets.QPushButton()
-        self.button.setText("Gönder")
+        self.button.setText("Send")
 
         self.button2 = QtWidgets.QPushButton()
-        self.button2.setText("Kullanici Degis")
+        self.button2.setText("Change User Name")
 
         self.dialog = QtWidgets.QInputDialog()
 
@@ -64,7 +64,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget().setLayout(self.main_layout)
 
     def get_username(self):
-        self.username = self.dialog.getText(self, "İsim", "İsim Girin")
+        self.username = self.dialog.getText(self, "Name", "Write a Name")
         if self.username[1]:
             self.user = self.username[0]
 
@@ -76,24 +76,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.text_input.setText("")
 
     def build_events(self):
-        self.text_input.returnPressed.connect(self.mesaj_gonder_callback)
+        self.text_input.returnPressed.connect(self.send_message_callback)
         self.text_input.returnPressed.connect(self.reset_inputs)
-        self.button.clicked.connect(self.mesaj_gonder_callback)
+        self.button.clicked.connect(self.send_message_callback)
         self.button.clicked.connect(self.reset_inputs)
         self.button2.clicked.connect(self.get_username)
 
-    def mesaj_gonder_callback(self):
-        mesaj_gonder(self.user, self.text_input.text())
+    def send_message_callback(self):
+        send_message(self.user, self.text_input.text())
 
-    def mesaj_al_callback(self):
-        mesajlar_string = ""
-        dic = mesaj_al()
+    def get_message_callback(self):
+        messages_string = ""
+        dic = get_message()
         for i, j in dic.items():
             for k in reversed(j):
                 #print(k['sender'], k['message'])
-                mesajlar_string += k['sender'] + ": " + k['message'] + "\n"
+                messages_string += k['sender'] + ": " + k['message'] + "\n"
 
-        self.textedit.setText(mesajlar_string)
+        self.textedit.setText(messages_string)
 
 
 
