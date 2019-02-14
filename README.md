@@ -2,6 +2,6 @@
 
 
 A simple python messaging app.
-Written in an academic IT conference.
+Written in 2019 academic IT conference.
 The interface was written using Qt.
 
